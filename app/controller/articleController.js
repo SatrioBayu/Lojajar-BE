@@ -13,7 +13,8 @@ const createArticle = async (req, res) => {
     });
 
     if (req.files) {
-      const uploadedFiles = await uploadMultipleFiles(req, res);
+      const data = await uploadMultipleFiles(req, res);
+      const uploadedFiles = await Promise.all(data);
       const articleImages = uploadedFiles.map((file) => {
         return {
           articleId: article.id,
@@ -24,9 +25,64 @@ const createArticle = async (req, res) => {
       await ArticleImage.bulkCreate(articleImages);
     }
 
+    const result = await Article.findOne({
+      where: {
+        id: article.id,
+      },
+      include: [
+        {
+          model: ArticleImage,
+        },
+      ],
+    });
+
     res.status(201).send({
       message: "Article created",
-      data: article,
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+const deleteArticle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const article = await Article.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!article) {
+      return res.status(404).send({
+        message: "Article not found",
+      });
+    }
+
+    const articleImages = await ArticleImage.findAll({
+      where: {
+        articleId: article.id,
+      },
+    });
+
+    if (articleImages) {
+      await Promise.all(
+        articleImages.map(async (image) => {
+          await cloudinary.uploader.destroy(image.publicId);
+          await image.destroy();
+        })
+      );
+    }
+
+    await article.update({
+      deletedAt: new Date(),
+    });
+
+    res.status(200).send({
+      message: "Article deleted",
     });
   } catch (error) {
     res.status(500).send({
@@ -52,4 +108,4 @@ const uploadMultipleFiles = async (req, res) => {
   return uploadedFile;
 };
 
-module.exports = { createArticle };
+module.exports = { createArticle, deleteArticle };

@@ -29,4 +29,12 @@ module.exports = {
       message: "Password must be at least 6 characters",
     }),
   ],
+  createArticle: [
+    body("judul").notEmpty().withMessage({
+      message: "Judul is required",
+    }),
+    body("isi").notEmpty().withMessage({
+      message: "Isi is required",
+    }),
+  ],
 };
