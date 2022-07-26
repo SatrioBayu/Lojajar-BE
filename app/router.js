@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const uploadOnMemory = require("../middleware/multer");
+const multipleUpload = uploadOnMemory.fields([{ name: "images", maxCount: 10 }]);
 const { authController } = require("./controller");
 const { validate } = require("./validation/validate");
 const { login, register } = require("./validation/bodyValidation");
