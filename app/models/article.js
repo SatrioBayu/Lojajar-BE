@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       judul: DataTypes.STRING,
       isi: DataTypes.STRING,
-      gambar: DataTypes.STRING,
       deletedAt: DataTypes.DATE,
     },
     {
