@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Article.init(
     {
+      userId: DataTypes.INTEGER,
       judul: DataTypes.STRING,
       isi: DataTypes.STRING,
       deletedAt: DataTypes.DATE,
