@@ -1,22 +1,22 @@
-const { Article, ArticleImage } = require("../models");
+const { Umkm, UmkmImage } = require("../models");
 const cloudinary = require("../../middleware/cloudinary");
 
-const getListArticle = async (req, res) => {
+const getListUmkm = async (req, res) => {
   try {
-    const article = await Article.findAll({
+    const umkm = await Umkm.findAll({
       where: {
         deletedAt: null,
       },
       include: [
         {
-          model: ArticleImage,
+          model: UmkmImage,
         },
       ],
     });
 
     res.status(200).send({
-      message: "Article successfully fetched",
-      data: article,
+      message: "Umkm successfully retrieved",
+      data: umkm,
     });
   } catch (error) {
     res.status(500).send({
@@ -25,43 +25,43 @@ const getListArticle = async (req, res) => {
   }
 };
 
-const createArticle = async (req, res) => {
+const createUmkm = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { judul, isi } = req.body;
+    const { nama, deskripsi } = req.body;
 
-    const article = await Article.create({
+    const umkm = await Umkm.create({
       userId,
-      judul,
-      isi,
+      nama,
+      deskripsi,
     });
 
     if (req.files.images) {
       const data = await uploadMultipleFiles(req, res);
       const uploadedFiles = await Promise.all(data);
-      const articleImages = uploadedFiles.map((file) => {
+      const umkmImages = uploadedFiles.map((file) => {
         return {
-          articleId: article.id,
+          umkmId: umkm.id,
           image: file.url,
           publicId: file.public_id,
         };
       });
-      await ArticleImage.bulkCreate(articleImages);
+      await UmkmImage.bulkCreate(umkmImages);
     }
 
-    const result = await Article.findOne({
+    const result = await Umkm.findOne({
       where: {
-        id: article.id,
+        id: umkm.id,
       },
       include: [
         {
-          model: ArticleImage,
+          model: UmkmImage,
         },
       ],
     });
 
-    res.status(201).send({
-      message: "Article created",
+    res.status(200).send({
+      message: "Umkm successfully created",
       data: result,
     });
   } catch (error) {
@@ -71,37 +71,36 @@ const createArticle = async (req, res) => {
   }
 };
 
-const updateArticle = async (req, res) => {
+const updateUmkm = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { judul, isi } = req.body;
+    const { nama, deskripsi } = req.body;
 
-    const article = await Article.findOne({
+    const umkm = await Umkm.findOne({
       where: {
-        id,
+        id: req.params.id,
       },
     });
 
-    if (!article) {
+    if (!umkm) {
       return res.status(404).send({
-        message: "Article not found",
+        message: "Umkm not found",
       });
     }
 
-    await article.update({
-      judul,
-      isi,
+    await umkm.update({
+      nama,
+      deskripsi,
     });
 
     if (req.files.images) {
-      const articlesImages = await ArticleImage.findAll({
+      const umkmImage = await UmkmImage.findAll({
         where: {
-          articleId: article.id,
+          umkmId: umkm.id,
         },
       });
-      if (articlesImages) {
+      if (umkmImage) {
         await Promise.all(
-          articlesImages.map(async (image) => {
+          umkmImage.map(async (image) => {
             await cloudinary.uploader.destroy(image.publicId);
             await image.destroy();
           })
@@ -110,29 +109,29 @@ const updateArticle = async (req, res) => {
 
       const data = await uploadMultipleFiles(req, res);
       const uploadedFiles = await Promise.all(data);
-      const articleImages = uploadedFiles.map((file) => {
+      const umkmImages = uploadedFiles.map((file) => {
         return {
-          articleId: article.id,
+          umkmId: umkm.id,
           image: file.url,
           publicId: file.public_id,
         };
       });
-      await ArticleImage.bulkCreate(articleImages);
+      await UmkmImage.bulkCreate(umkmImages);
     }
 
-    const result = await Article.findOne({
+    const result = await Umkm.findOne({
       where: {
-        id,
+        id: umkm.id,
       },
       include: [
         {
-          model: ArticleImage,
+          model: UmkmImage,
         },
       ],
     });
 
     res.status(200).send({
-      message: "Article updated",
+      message: "Umkm successfully updated",
       data: result,
     });
   } catch (error) {
@@ -142,42 +141,40 @@ const updateArticle = async (req, res) => {
   }
 };
 
-const deleteArticle = async (req, res) => {
+const deleteUmkm = async (req, res) => {
   try {
-    const { id } = req.params;
-    const article = await Article.findOne({
+    const umkm = await Umkm.findOne({
       where: {
-        id,
+        id: req.params.id,
       },
     });
 
-    if (!article) {
+    if (!umkm) {
       return res.status(404).send({
-        message: "Article not found",
+        message: "Umkm not found",
       });
     }
 
-    const articleImages = await ArticleImage.findAll({
+    const umkmImage = await UmkmImage.findAll({
       where: {
-        articleId: article.id,
+        umkmId: umkm.id,
       },
     });
-
-    if (articleImages) {
+    if (umkmImage) {
       await Promise.all(
-        articleImages.map(async (image) => {
+        umkmImage.map(async (image) => {
           await cloudinary.uploader.destroy(image.publicId);
           await image.destroy();
         })
       );
     }
 
-    await article.update({
+    await umkm.update({
       deletedAt: new Date(),
     });
 
     res.status(200).send({
-      message: "Article deleted",
+      message: "Umkm successfully deleted",
     });
   } catch (error) {
     res.status(500).send({
@@ -203,4 +200,4 @@ const uploadMultipleFiles = async (req, res) => {
   return uploadedFile;
 };
 
-module.exports = { getListArticle, createArticle, deleteArticle, updateArticle };
+module.exports = { getListUmkm, createUmkm, updateUmkm, deleteUmkm };

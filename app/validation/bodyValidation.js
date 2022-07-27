@@ -34,4 +34,12 @@ module.exports = {
       message: "Isi is required",
     }),
   ],
+  createUmkm: [
+    body("nama").notEmpty().withMessage({
+      message: "Nama is required",
+    }),
+    body("deskripsi").notEmpty().withMessage({
+      message: "Deskripsi is required",
+    }),
+  ],
 };
