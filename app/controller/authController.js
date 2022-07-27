@@ -29,21 +29,21 @@ const authorize = async (req, res, next) => {
 
 const handleLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     const user = await User.findOne({
       where: {
-        email,
+        username,
       },
     });
     if (!user) {
       return res.status(400).send({
-        message: "Email or password is incorrect",
+        message: "Username or password is incorrect",
       });
     }
     const isPasswordValid = await verifyPassword(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).send({
-        message: "Email or password is incorrect",
+        message: "Username or password is incorrect",
       });
     }
     const token = createToken(user);
@@ -59,20 +59,20 @@ const handleLogin = async (req, res) => {
 
 const handleRegister = async (req, res) => {
   try {
-    const { email, password, nama } = req.body;
+    const { username, password, nama } = req.body;
     const user = await User.findOne({
       where: {
-        email,
+        username,
       },
     });
     if (user) {
       return res.status(400).send({
-        message: "Email already exists",
+        message: "Username already exists",
       });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
-      email,
+      username,
       password: hashedPassword,
       nama,
     });

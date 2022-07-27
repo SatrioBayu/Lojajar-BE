@@ -17,7 +17,9 @@ router.post("/login", login, validate, authController.handleLogin);
 router.post("/register", register, validate, authController.handleRegister);
 
 // Article
+router.get("/article", articleController.getListArticle);
 router.post("/article", authController.authorize, multipleUpload, createArticle, validate, articleController.createArticle);
 router.delete("/article/:id", authController.authorize, articleController.deleteArticle);
+router.put("/article/:id", authController.authorize, multipleUpload, createArticle, validate, articleController.updateArticle);
 
 module.exports = router;

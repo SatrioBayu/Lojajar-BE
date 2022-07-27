@@ -1,6 +1,30 @@
 const { Article, ArticleImage } = require("../models");
 const cloudinary = require("../../middleware/cloudinary");
 
+const getListArticle = async (req, res) => {
+  try {
+    const article = await Article.findAll({
+      where: {
+        deletedAt: null,
+      },
+      include: [
+        {
+          model: ArticleImage,
+        },
+      ],
+    });
+
+    res.status(200).send({
+      message: "Article successfully fetched",
+      data: article,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
 const createArticle = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -38,6 +62,77 @@ const createArticle = async (req, res) => {
 
     res.status(201).send({
       message: "Article created",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+const updateArticle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { judul, isi } = req.body;
+
+    const article = await Article.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!article) {
+      return res.status(404).send({
+        message: "Article not found",
+      });
+    }
+
+    await article.update({
+      judul,
+      isi,
+    });
+
+    if (req.files.images) {
+      const articlesImages = await ArticleImage.findAll({
+        where: {
+          articleId: article.id,
+        },
+      });
+      if (articlesImages) {
+        await Promise.all(
+          articlesImages.map(async (image) => {
+            await cloudinary.uploader.destroy(image.publicId);
+            await image.destroy();
+          })
+        );
+      }
+
+      const data = await uploadMultipleFiles(req, res);
+      const uploadedFiles = await Promise.all(data);
+      const articleImages = uploadedFiles.map((file) => {
+        return {
+          articleId: article.id,
+          image: file.url,
+          publicId: file.public_id,
+        };
+      });
+      await ArticleImage.bulkCreate(articleImages);
+    }
+
+    const result = await Article.findOne({
+      where: {
+        id,
+      },
+      include: [
+        {
+          model: ArticleImage,
+        },
+      ],
+    });
+
+    res.status(200).send({
+      message: "Article updated",
       data: result,
     });
   } catch (error) {
@@ -108,4 +203,4 @@ const uploadMultipleFiles = async (req, res) => {
   return uploadedFile;
 };
 
-module.exports = { createArticle, deleteArticle };
+module.exports = { getListArticle, createArticle, deleteArticle, updateArticle };
