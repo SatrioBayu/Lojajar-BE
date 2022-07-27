@@ -42,4 +42,18 @@ module.exports = {
       message: "Deskripsi is required",
     }),
   ],
+  createSurat: [
+    body("nama").notEmpty().withMessage({
+      message: "Nama is required",
+    }),
+    body("nik").notEmpty().withMessage({
+      message: "NIK is required",
+    }),
+    body("email").notEmpty().withMessage({
+      message: "Email is required",
+    }),
+    body("jenis").notEmpty().withMessage({
+      message: "Jenis is required",
+    }),
+  ],
 };

@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const uploadOnMemory = require("../middleware/multer");
 const multipleUpload = uploadOnMemory.fields([{ name: "images", maxCount: 10 }]);
-const { authController, articleController, umkmController } = require("./controller");
+const { authController, articleController, umkmController, suratController } = require("./controller");
 const { validate } = require("./validation/validate");
-const { login, register, createArticle, createUmkm } = require("./validation/bodyValidation");
+const { login, register, createArticle, createUmkm, createSurat } = require("./validation/bodyValidation");
 
 router.get("/", (req, res) => {
   res.send({
@@ -27,5 +27,11 @@ router.get("/umkm", umkmController.getListUmkm);
 router.post("/umkm", authController.authorize, multipleUpload, createUmkm, validate, umkmController.createUmkm);
 router.delete("/umkm/:id", authController.authorize, umkmController.deleteUmkm);
 router.put("/umkm/:id", authController.authorize, multipleUpload, createUmkm, validate, umkmController.updateUmkm);
+
+// Surat
+router.get("/surat", suratController.getAllSurat);
+router.post("/surat", createSurat, validate, suratController.createSurat);
+router.delete("/surat/:id", authController.authorize, suratController.deleteSurat);
+router.put("/surat/:id", createSurat, validate, suratController.updateSurat);
 
 module.exports = router;
