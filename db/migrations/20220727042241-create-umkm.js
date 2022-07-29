@@ -20,6 +20,18 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      jenis: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      alamat: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      noHp: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       deskripsi: {
         type: Sequelize.STRING,
         allowNull: false,
