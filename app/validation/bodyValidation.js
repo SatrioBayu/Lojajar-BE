@@ -38,6 +38,18 @@ module.exports = {
     body("nama").notEmpty().withMessage({
       message: "Nama is required",
     }),
+    body("jenis").notEmpty().withMessage({
+      message: "Jenis is required",
+    }),
+    body("alamat").notEmpty().withMessage({
+      message: "Alamat is required",
+    }),
+    body("noHp").notEmpty().withMessage({
+      message: "No Hp is required",
+    }),
+    body("noHp").isMobilePhone("id-ID").withMessage({
+      message: "No Hp must be in Indonesia",
+    }),
     body("deskripsi").notEmpty().withMessage({
       message: "Deskripsi is required",
     }),

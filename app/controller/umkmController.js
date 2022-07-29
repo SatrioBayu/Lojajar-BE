@@ -28,11 +28,14 @@ const getListUmkm = async (req, res) => {
 const createUmkm = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { nama, deskripsi } = req.body;
+    const { nama, jenis, alamat, noHp, deskripsi } = req.body;
 
     const umkm = await Umkm.create({
       userId,
       nama,
+      jenis,
+      alamat,
+      noHp,
       deskripsi,
     });
 
@@ -73,7 +76,7 @@ const createUmkm = async (req, res) => {
 
 const updateUmkm = async (req, res) => {
   try {
-    const { nama, deskripsi } = req.body;
+    const { nama, jenis, alamat, noHp, deskripsi } = req.body;
 
     const umkm = await Umkm.findOne({
       where: {
@@ -89,6 +92,9 @@ const updateUmkm = async (req, res) => {
 
     await umkm.update({
       nama,
+      jenis,
+      alamat,
+      noHp,
       deskripsi,
     });
 

@@ -1,4 +1,4 @@
-const { Article, ArticleImage } = require("../models");
+const { Article, ArticleImage, User } = require("../models");
 const cloudinary = require("../../middleware/cloudinary");
 
 const getListArticle = async (req, res) => {
@@ -10,6 +10,9 @@ const getListArticle = async (req, res) => {
       include: [
         {
           model: ArticleImage,
+        },
+        {
+          model: User,
         },
       ],
     });
