@@ -28,6 +28,41 @@ const getListArticle = async (req, res) => {
   }
 };
 
+const getArticle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const article = await Article.findOne({
+      where: {
+        id,
+        deletedAt: null,
+      },
+      include: [
+        {
+          model: ArticleImage,
+        },
+        {
+          model: User,
+        },
+      ],
+    });
+
+    if (!article) {
+      return res.status(404).send({
+        message: "Article not found",
+      });
+    }
+
+    res.status(200).send({
+      message: "Article successfully fetched",
+      data: article,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
 const createArticle = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -82,6 +117,7 @@ const updateArticle = async (req, res) => {
     const article = await Article.findOne({
       where: {
         id,
+        deletedAt: null,
       },
     });
 
@@ -206,4 +242,4 @@ const uploadMultipleFiles = async (req, res) => {
   return uploadedFile;
 };
 
-module.exports = { getListArticle, createArticle, deleteArticle, updateArticle };
+module.exports = { getListArticle, createArticle, deleteArticle, updateArticle, getArticle };

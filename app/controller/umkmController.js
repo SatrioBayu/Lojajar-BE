@@ -25,6 +25,37 @@ const getListUmkm = async (req, res) => {
   }
 };
 
+const getUmkm = async (req, res) => {
+  try {
+    const umkm = await Umkm.findOne({
+      where: {
+        id: req.params.id,
+        deletedAt: null,
+      },
+      include: [
+        {
+          model: UmkmImage,
+        },
+      ],
+    });
+
+    if (!umkm) {
+      return res.status(404).send({
+        message: "Umkm not found",
+      });
+    }
+
+    res.status(200).send({
+      message: "Umkm successfully retrieved",
+      data: umkm,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
 const createUmkm = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -81,6 +112,7 @@ const updateUmkm = async (req, res) => {
     const umkm = await Umkm.findOne({
       where: {
         id: req.params.id,
+        deletedAt: null,
       },
     });
 
@@ -206,4 +238,4 @@ const uploadMultipleFiles = async (req, res) => {
   return uploadedFile;
 };
 
-module.exports = { getListUmkm, createUmkm, updateUmkm, deleteUmkm };
+module.exports = { getListUmkm, createUmkm, updateUmkm, deleteUmkm, getUmkm };

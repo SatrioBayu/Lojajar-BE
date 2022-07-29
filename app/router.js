@@ -18,12 +18,14 @@ router.post("/register", register, validate, authController.handleRegister);
 
 // Article
 router.get("/article", articleController.getListArticle);
+router.get("/article/:id", articleController.getArticle);
 router.post("/article", authController.authorize, multipleUpload, createArticle, validate, articleController.createArticle);
 router.delete("/article/:id", authController.authorize, articleController.deleteArticle);
 router.put("/article/:id", authController.authorize, multipleUpload, createArticle, validate, articleController.updateArticle);
 
 // Umkm
 router.get("/umkm", umkmController.getListUmkm);
+router.get("/umkm/:id", umkmController.getUmkm);
 router.post("/umkm", authController.authorize, multipleUpload, createUmkm, validate, umkmController.createUmkm);
 router.delete("/umkm/:id", authController.authorize, umkmController.deleteUmkm);
 router.put("/umkm/:id", authController.authorize, multipleUpload, createUmkm, validate, umkmController.updateUmkm);
