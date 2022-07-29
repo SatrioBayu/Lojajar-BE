@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       judul: DataTypes.STRING,
-      isi: DataTypes.STRING,
+      isi: DataTypes.STRING(1000),
       deletedAt: DataTypes.DATE,
     },
     {

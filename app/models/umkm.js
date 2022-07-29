@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       jenis: DataTypes.STRING,
       alamat: DataTypes.STRING,
       noHp: DataTypes.STRING,
-      deskripsi: DataTypes.STRING,
+      deskripsi: DataTypes.STRING(1000),
       deletedAt: DataTypes.DATE,
     },
     {
