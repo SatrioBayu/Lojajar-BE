@@ -1,4 +1,5 @@
 const { Surat } = require("../models");
+const nodeMailer = require("nodemailer");
 
 const getAllSurat = async (req, res) => {
   try {
@@ -15,14 +16,47 @@ const getAllSurat = async (req, res) => {
 const createSurat = async (req, res) => {
   try {
     const { nama, nik, email, jenis, keterangan = null } = req.body;
-    const surat = await Surat.create({
-      nama,
-      nik,
-      email,
-      jenis,
-      keterangan,
+    // const surat = await Surat.create({
+    //   nama,
+    //   nik,
+    //   email,
+    //   jenis,
+    //   keterangan,
+    // });
+    const transporter = nodeMailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "mnoble350@gmail.com",
+        pass: "ekrnlbfqxwxmvmza",
+      },
     });
-    res.status(201).send(surat);
+    const mailOptions = {
+      from: "mnoble350@gmail.com",
+      to: email,
+      subject: "Surat Keterangan",
+      text: `Hai ${nama},
+      Terima kasih atas permintaan anda untuk mengirimkan surat keterangan.
+      Mohon untuk menunggu konfirmasi dari kami.
+      Salam,
+      Admin`,
+      attachments: [
+        {
+          filename: "surat.pdf",
+          path: "./public/CV.pdf",
+        },
+      ],
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        throw new Error(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+    res.status(200).send({
+      message: "Surat berhasil dikirim",
+    });
   } catch (error) {
     res.status(400).send(error);
   }
