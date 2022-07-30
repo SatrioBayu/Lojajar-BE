@@ -27,6 +27,10 @@ module.exports = {
       keterangan: {
         type: Sequelize.STRING,
       },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

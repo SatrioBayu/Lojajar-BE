@@ -4,7 +4,7 @@ const uploadOnMemory = require("../middleware/multer");
 const multipleUpload = uploadOnMemory.fields([{ name: "images", maxCount: 10 }]);
 const { authController, articleController, umkmController, suratController } = require("./controller");
 const { validate } = require("./validation/validate");
-const { login, register, createArticle, createUmkm, createSurat } = require("./validation/bodyValidation");
+const { login, register, createArticle, createUmkm, createSurat, updateSurat } = require("./validation/bodyValidation");
 
 router.get("/", (req, res) => {
   res.send({
@@ -34,6 +34,6 @@ router.put("/umkm/:id", authController.authorize, multipleUpload, createUmkm, va
 router.get("/surat", suratController.getAllSurat);
 router.post("/surat", createSurat, validate, suratController.createSurat);
 router.delete("/surat/:id", authController.authorize, suratController.deleteSurat);
-router.put("/surat/:id", createSurat, validate, suratController.updateSurat);
+router.put("/surat/:id", authController.authorize, updateSurat, validate, suratController.updateSurat);
 
 module.exports = router;

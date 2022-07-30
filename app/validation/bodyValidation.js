@@ -68,4 +68,9 @@ module.exports = {
       message: "Jenis is required",
     }),
   ],
+  updateSurat: [
+    body("status").notEmpty().withMessage({
+      message: "Status is required",
+    }),
+  ],
 };

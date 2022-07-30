@@ -22,6 +22,7 @@ const createSurat = async (req, res) => {
       email,
       jenis,
       keterangan,
+      status: "Diproses",
     });
     // const transporter = nodeMailer.createTransport({
     //   service: "gmail",
@@ -66,7 +67,7 @@ const createSurat = async (req, res) => {
 const updateSurat = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nama, nik, email, jenis, keterangan = null } = req.body;
+    const { status } = req.body;
     const surat = await Surat.findOne({
       where: {
         id,
@@ -79,12 +80,9 @@ const updateSurat = async (req, res) => {
     }
 
     await surat.update({
-      nama,
-      nik,
-      email,
-      jenis,
-      keterangan,
+      status,
     });
+
     res.status(200).send({
       message: "Surat berhasil diubah",
     });
