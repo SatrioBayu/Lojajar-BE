@@ -15,11 +15,13 @@ const getAllSurat = async (req, res) => {
 
 const createSurat = async (req, res) => {
   try {
-    const { nama, nik, email, jenis, keterangan = null } = req.body;
+    const { nama, nik, namaPemohon, nikPemohon, noWa, jenis, keterangan = null } = req.body;
     const surat = await Surat.create({
       nama,
       nik,
-      email,
+      namaPemohon,
+      nikPemohon,
+      noWa,
       jenis,
       keterangan,
       status: "Diproses",

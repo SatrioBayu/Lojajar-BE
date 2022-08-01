@@ -61,8 +61,14 @@ module.exports = {
     body("nik").notEmpty().withMessage({
       message: "NIK is required",
     }),
-    body("email").notEmpty().withMessage({
-      message: "Email is required",
+    body("namaPemohon").notEmpty().withMessage({
+      message: "namaPemohon is required",
+    }),
+    body("nikPemohon").notEmpty().withMessage({
+      message: "nikPemohon is required",
+    }),
+    body("noWa").notEmpty().withMessage({
+      message: "noWa is required",
     }),
     body("jenis").notEmpty().withMessage({
       message: "Jenis is required",
