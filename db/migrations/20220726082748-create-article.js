@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
       },
       isi: {
-        type: Sequelize.STRING(1000),
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       createdAt: {
